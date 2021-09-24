@@ -62,6 +62,9 @@ class RuleEngineController extends AbstractController
       $filename = $file->getClientOriginalName();
       $uploader->upload($uploadDir, $file, $filename);
       $file_name = $uploadDir . '/' . $filename;
+
+
+
       // Upload file for test
       try {
         $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
@@ -75,13 +78,13 @@ class RuleEngineController extends AbstractController
 
       try {
         $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
-        $message = 'Your Upload Id  for dependency ' . $filename . ' is ' . $ciUploadId;
+        $message = 'Your Upload Id is ' . $ciUploadId;
         $notifyService->sendNotification($email, $message);
+        return new JsonResponse(['message' => $message], 200);
       } catch (\Exception $e) {
         return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
       }
     }
-    return new JsonResponse(['message' => 'The uploading process is completed'], 200);
   }
 
 

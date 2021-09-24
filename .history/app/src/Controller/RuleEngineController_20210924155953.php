@@ -75,7 +75,7 @@ class RuleEngineController extends AbstractController
 
       try {
         $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
-        $message = 'Your Upload Id  for dependency ' . $filename . ' is ' . $ciUploadId;
+        $message = 'Your Upload Id  for dependency ' . $file_name . ' is ' . $ciUploadId;
         $notifyService->sendNotification($email, $message);
       } catch (\Exception $e) {
         return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());

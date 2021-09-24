@@ -59,29 +59,39 @@ class RuleEngineController extends AbstractController
     $files = $request->files->get('file');
 
     foreach ($files as $file) {
-      $filename = $file->getClientOriginalName();
-      $uploader->upload($uploadDir, $file, $filename);
-      $file_name = $uploadDir . '/' . $filename;
-      // Upload file for test
-      try {
-        $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
-        $ciUploadId = (string)$upload_file_response['ciUploadId'];
-      } catch (\Exception $e) {
-        $message = "The upload is not completed";
-        return new JsonResponse(["message" => $message], $e->getCode());
-      }
-
-      // Conclude Uploaded File
-
-      try {
-        $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
-        $message = 'Your Upload Id  for dependency ' . $filename . ' is ' . $ciUploadId;
-        $notifyService->sendNotification($email, $message);
-      } catch (\Exception $e) {
-        return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
-      }
+      // $filename = $file->getClientOriginalName();
+      // $uploader->upload($uploadDir, $file, $filename);
+      // $file_name = $uploadDir . '/' . $filename;
     }
-    return new JsonResponse(['message' => 'The uploading process is completed'], 200);
+
+
+
+
+
+
+
+
+
+
+    // Upload file for test
+    // try {
+    //   $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
+    //   $ciUploadId = (string)$upload_file_response['ciUploadId'];
+    // } catch (\Exception $e) {
+    //   $message = "The upload is not completed";
+    //   return new JsonResponse(["message" => $message], $e->getCode());
+    // }
+
+    // Conclude Uploaded File
+
+    // try {
+    //   $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
+    //   $message = 'Your Upload Id is ' . $ciUploadId;
+    //   $notifyService->sendNotification($email, $message);
+    //   return new JsonResponse(['message' => $message], 200);
+    // } catch (\Exception $e) {
+    //   return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
+    // }
   }
 
 

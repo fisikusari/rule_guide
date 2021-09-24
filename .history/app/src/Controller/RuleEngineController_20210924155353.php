@@ -37,51 +37,54 @@ class RuleEngineController extends AbstractController
   public function rule_engine(AuthService $authService, CallApiService $callApiService, string $uploadDir, FileUploader $uploader, NotifyService $notifyService, Request $request): Response
   {
 
-    // Required field 
 
-    $repositoryName = $request->get('repositoryName');
-    $commitName = $request->get('commitName');
-
-    // Try to login and generate JWT token
-
-    $email = $request->get('email');
-    $password = $request->get('password');
-
+   Try to login and generate JWT token
     try {
       $auth = $authService->login($email, $password);
       $token = $auth['token'];
     } catch (\Exception $e) {
       return new JsonResponse(["message" => "The credentials used for the login requests towards the external api are not okay!"], $e->getCode());
     }
-
-    // Get files from request and upload on uploadDir folder.
+    // Get file from request and upload on uploadDir folder.
 
     $files = $request->files->get('file');
-
     foreach ($files as $file) {
-      $filename = $file->getClientOriginalName();
-      $uploader->upload($uploadDir, $file, $filename);
-      $file_name = $uploadDir . '/' . $filename;
-      // Upload file for test
-      try {
-        $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
-        $ciUploadId = (string)$upload_file_response['ciUploadId'];
-      } catch (\Exception $e) {
-        $message = "The upload is not completed";
-        return new JsonResponse(["message" => $message], $e->getCode());
-      }
-
-      // Conclude Uploaded File
-
-      try {
-        $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
-        $message = 'Your Upload Id  for dependency ' . $filename . ' is ' . $ciUploadId;
-        $notifyService->sendNotification($email, $message);
-      } catch (\Exception $e) {
-        return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
-      }
+      # code...
     }
-    return new JsonResponse(['message' => 'The uploading process is completed'], 200);
+    // $filename = $file->getClientOriginalName();
+    // $uploader->upload($uploadDir, $file, $filename);
+    // $file_name = $uploadDir . '/' . $filename;
+
+    //Email and password to generate JWT token 
+    // $email = $request->get('email');
+    // $password = $request->get('password');
+
+    // Required field 
+    // $repositoryName = $request->get('repositoryName');
+    // $commitName = $request->get('commitName');
+
+
+ 
+
+    // Upload file for test
+    // try {
+    //   $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
+    //   $ciUploadId = (string)$upload_file_response['ciUploadId'];
+    // } catch (\Exception $e) {
+    //   $message = "The upload is not completed";
+    //   return new JsonResponse(["message" => $message], $e->getCode());
+    // }
+
+    // Conclude Uploaded File
+
+    // try {
+    //   $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
+    //   $message = 'Your Upload Id is ' . $ciUploadId;
+    //   $notifyService->sendNotification($email, $message);
+    //   return new JsonResponse(['message' => $message], 200);
+    // } catch (\Exception $e) {
+    //   return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
+    // }
   }
 
 
