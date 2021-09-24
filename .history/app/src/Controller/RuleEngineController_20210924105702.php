@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
  * RuleEngineController
@@ -34,29 +33,19 @@ class RuleEngineController extends AbstractController
    * @return Response
    */
 
-  public function rule_engine(AuthService $authService, CallApiService $callApiService, string $uploadDir, FileUploader $uploader, NotifyService $notifyService, Request $request): Response
+  public function rule_guide(AuthService $authService, CallApiService $callApiService, string $uploadDir, FileUploader $uploader, NotifyService $notifyService, Request $request): Response
   {
+    $email = $request->get('email');
+    $password = $request->get('password');
 
-    // Get file from request and upload on uploadDir folder.
 
     $file = $request->files->get('file');
     $filename = $file->getClientOriginalName();
     $uploader->upload($uploadDir, $file, $filename);
     $file_name = $uploadDir . '/' . $filename;
-
-    //Email and password to generate JWT token 
-    $email = $request->get('email');
-    $password = $request->get('password');
-
-    // Required field 
     $repositoryName = $request->get('repositoryName');
     $commitName = $request->get('commitName');
 
-
-    // Env Variables 
-    $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
-
-    // Try to login and generate JWT token
     try {
       $auth = $authService->login($email, $password);
       $token = $auth['token'];
@@ -64,20 +53,35 @@ class RuleEngineController extends AbstractController
       return new JsonResponse(["message" => "The credentials used for the login requests towards the external api are not okay!"], $e->getCode());
     }
 
-    // Upload file for test
     try {
       $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
       $upload_in_progress = $this->getParameter('app.upload_in_progress');
-      $ciUploadId = (string)$upload_file_response['ciUploadId'];
+      if ($upload_in_progress) {
+        $message = "The uploading has started";
+        $notifyService->sendNotification($email, $message);
+      }
     } catch (\Exception $e) {
       $message = "The upload is not completed";
+      $notifyService->sendNotification($email, $message);
       return new JsonResponse(["message" => $message], $e->getCode());
     }
 
-    // Conclude Uploaded File
+    $ciUploadId = (string)$upload_file_response['ciUploadId'];
 
     try {
       $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
+    } catch (\Exception $e) {
+      return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
+    }
+
+    try {
+      $status = $callApiService->get_status($token, $ciUploadId);
+      $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
+      if ($status['vulnerabilitiesFound'] > $vulnerabilities_value) {
+        $message = "The number of vulnerabilities found is" . $status['vulnerabilitiesFound'];
+        $notifyService->sendNotification($email, $message);
+      }
+      return new JsonResponse(['status' => $status], 200);
     } catch (\Exception $e) {
       return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
     }

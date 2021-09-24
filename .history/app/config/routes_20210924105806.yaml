@@ -6,8 +6,3 @@ rule_engine_test:
   path: /rule-engine
   controller: App\Controller\RuleEngineController::rule_engine
   methods: [POST]
-
-rule_engine_status:
-  path: /get-status
-  controller: App\Controller\RuleEngineController::get_status
-  method: [GET]

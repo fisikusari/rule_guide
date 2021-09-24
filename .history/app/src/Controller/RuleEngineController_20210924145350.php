@@ -83,3 +83,38 @@ class RuleEngineController extends AbstractController
     }
   }
 }
+ 
+
+// public function system
+// if ($status['vulnerabilitiesFound'] > $vulnerabilities_value) {
+//   $message = "The number of vulnerabilities found is" . $status['vulnerabilitiesFound'];
+//   $notifyService->sendNotification($email, $message);
+// }
+  // if ($upload_in_progress) {
+      //   $message = "The uploading has started";
+      //   $notifyService->sendNotification($email, $message);
+      // }
+// $output  = $this->somethingToTest();
+// $progressBar = new ProgressBar($output, 100);
+
+// starts and displays the progress bar
+// $progressBar->start();
+
+// $i = 0;
+// while ($i++ < 100) {
+//   // ... do some work
+
+//   // advances the progress bar 1 unit
+//   $progressBar->advance();
+
+//   // you can also advance the progress bar by more than 1 unit
+//   // $progressBar->advance(3);
+// }
+// // return new JsonResponse($i);
+// // ensures that the progress bar is at 100%
+// $progressBar->finish();
+
+  // public function somethingToTest()
+  // {
+  //   return new JsonResponse('testing');
+  // }

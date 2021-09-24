@@ -9,5 +9,5 @@ rule_engine_test:
 
 rule_engine_status:
   path: /get-status
-  controller: App\Controller\RuleEngineController::get_status
+  controller:
   method: [GET]

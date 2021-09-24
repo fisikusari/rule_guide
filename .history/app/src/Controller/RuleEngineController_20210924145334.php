@@ -82,4 +82,78 @@ class RuleEngineController extends AbstractController
       return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
     }
   }
+
+
+  /**
+   * get_status
+   *
+   * @Route("/get-status", name="rule_engine_status")
+   *
+   * @param  mixed $authService
+   * @param  mixed $callApiService
+   * @param  mixed $request
+   * @return Response
+   */
+  public function get_status(AuthService $authService, CallApiService $callApiService, Request $request): Response
+  {
+
+    //Email and password to generate JWT token 
+    $email = $request->get('email');
+    $password = $request->get('password');
+    // Try to login and generate JWT token
+    try {
+      $auth = $authService->login($email, $password);
+      $token = $auth['token'];
+    } catch (\Exception $e) {
+      return new JsonResponse(["message" => "The credentials used for the login requests towards the external api are not okay!"], $e->getCode());
+    }
+
+    $ciUploadId = $request->get('ciUploadId');
+    try {
+      $status = $callApiService->get_status($token, $ciUploadId);
+      if ($status['progress'] == 100) {
+        // is completed
+      } else {
+        //On progress
+      }
+      return new JsonResponse(['status' => $status], 200);
+    } catch (\Exception $e) {
+      return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
+    }
+  }
 }
+ 
+
+// public function system
+// if ($status['vulnerabilitiesFound'] > $vulnerabilities_value) {
+//   $message = "The number of vulnerabilities found is" . $status['vulnerabilitiesFound'];
+//   $notifyService->sendNotification($email, $message);
+// }
+  // if ($upload_in_progress) {
+      //   $message = "The uploading has started";
+      //   $notifyService->sendNotification($email, $message);
+      // }
+// $output  = $this->somethingToTest();
+// $progressBar = new ProgressBar($output, 100);
+
+// starts and displays the progress bar
+// $progressBar->start();
+
+// $i = 0;
+// while ($i++ < 100) {
+//   // ... do some work
+
+//   // advances the progress bar 1 unit
+//   $progressBar->advance();
+
+//   // you can also advance the progress bar by more than 1 unit
+//   // $progressBar->advance(3);
+// }
+// // return new JsonResponse($i);
+// // ensures that the progress bar is at 100%
+// $progressBar->finish();
+
+  // public function somethingToTest()
+  // {
+  //   return new JsonResponse('testing');
+  // }
