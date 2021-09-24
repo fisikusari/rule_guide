@@ -1,0 +1,11 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+rule_engine:
+  path: /rule-engine
+  controller: App\Controller\RuleEngineController::index
+
+rule_engine_test:
+  path: /rule_engine
+  contro: App\Controller\RuleEngineController::test

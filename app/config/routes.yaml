@@ -1,0 +1,8 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+rule_engine_test:
+  path: /rule-engine
+  controller: App\Controller\RuleEngineController::test
+  methods: [POST]

@@ -1,0 +1,4 @@
+rule_engine_test:
+  path: /rule-engine
+  controller: App\Controller\RuleEngineController::test
+  methods: [POST]

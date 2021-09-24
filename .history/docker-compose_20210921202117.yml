@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: php
+    build:
+      context: ./php
+    ports:
+      - '9000:9000'
+    volumes:
+      - ./app:/var/www/symfony_docker
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8080:80'
+    volumes:
+      - ./app:/var/www/symfony_docker
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+  mailer:
+    image: tvial/docker-mailserver
+    container_name: my_app_mailer
+    hostname: mail
+    domainname: myapp.dev
+    ports:
+      - '25:25'
+      - '143:143'
+      - '587:587'
+      - '993:993'
+    volumes:
+      - ./mail/spamassassin:/tmp/spamassassin/
+      - ./mail/postfix:/tmp/postfix/

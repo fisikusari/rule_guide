@@ -1,0 +1,13 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+rule_engine:
+  path: /rule-engine
+  controller: App\Controller\RuleEngineController::index
+  method:[Get]
+
+rule_engine_test:
+  path: /rule_engine
+  controller: App\Controller\RuleEngineController::test
+   method:[Post]
