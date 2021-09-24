@@ -122,7 +122,7 @@ class RuleEngineController extends AbstractController
     try {
       $status = $callApiService->get_status($token, $ciUploadId);
       if ($status['progress'] == 100) {
-        $message = 'Total number of the vulnerabilities found is ' . $status['vulnerabilitiesFound'];
+        $message = 'Total number of the vulnerabilities found is' . $status['vulnerabilitiesFound'];
         if ($vulnerabilities_value < $status['vulnerabilitiesFound']) {
           $notifyService->sendNotification($email, $message);
         }

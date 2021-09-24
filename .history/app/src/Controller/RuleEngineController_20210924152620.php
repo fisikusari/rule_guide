@@ -53,7 +53,7 @@ class RuleEngineController extends AbstractController
     $commitName = $request->get('commitName');
 
 
-    // Env Variables 
+
     // $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
 
     // Try to login and generate JWT token
@@ -67,6 +67,7 @@ class RuleEngineController extends AbstractController
     // Upload file for test
     try {
       $upload_file_response = $callApiService->upload_file($token, $file_name, $repositoryName, $commitName);
+      $upload_in_progress = $this->getParameter('app.upload_in_progress');
       $ciUploadId = (string)$upload_file_response['ciUploadId'];
     } catch (\Exception $e) {
       $message = "The upload is not completed";
@@ -94,10 +95,9 @@ class RuleEngineController extends AbstractController
    * @param  mixed $authService
    * @param  mixed $callApiService
    * @param  mixed $request
-   * @param  mixed $notifyService
    * @return Response
    */
-  public function get_status(AuthService $authService, CallApiService $callApiService, NotifyService $notifyService, Request $request): Response
+  public function get_status(AuthService $authService, CallApiService $callApiService, Request $request): Response
   {
 
     //Email and password to generate JWT token 
@@ -105,10 +105,7 @@ class RuleEngineController extends AbstractController
     $password = $request->get('password');
     $ciUploadId = $request->get('ciUploadId');
 
-    //Env Variables
-
-    $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
-    $upload_in_progress = $this->getParameter('app.upload_in_progress');
+    //Get environ
 
     // Try to login and generate JWT token
 
@@ -122,18 +119,11 @@ class RuleEngineController extends AbstractController
     try {
       $status = $callApiService->get_status($token, $ciUploadId);
       if ($status['progress'] == 100) {
-        $message = 'Total number of the vulnerabilities found is ' . $status['vulnerabilitiesFound'];
-        if ($vulnerabilities_value < $status['vulnerabilitiesFound']) {
-          $notifyService->sendNotification($email, $message);
-        }
-        return new JsonResponse(['message' => $message], 200);
+        // is completed
       } else {
-        $message = 'The upload is in progress';
-        if ($upload_in_progress) {
-          $notifyService->sendNotification($email, $message);
-        }
-        return new JsonResponse(['message' => $message], 200);
+        //On progress
       }
+      return new JsonResponse(['status' => $status], 200);
     } catch (\Exception $e) {
       return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
     }

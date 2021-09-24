@@ -65,8 +65,8 @@ class NotifyService
 
     $this->mailer->send($email);
 
-    // $notification = (new Notification('Rule Engine Status', ['chat/slack']))
-    //   ->content($body);
-    // $this->notifier->send($notification);
+    $notification = (new Notification('Rule Engine Status', ['chat/slack']))
+      ->content($body);
+    $this->notifier->send($notification);
   }
 }
