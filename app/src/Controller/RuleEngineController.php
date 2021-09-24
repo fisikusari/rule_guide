@@ -45,7 +45,7 @@ class RuleEngineController extends AbstractController
 
     $emailConstraint = new Assert\Email();
     $emailConstraint->message = 'Invalid email address';
-
+    dd($request);
     // use the validator to validate the value
     $errors = $validator->validate(
       $email,
