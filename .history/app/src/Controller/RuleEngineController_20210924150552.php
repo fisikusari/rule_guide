@@ -63,6 +63,8 @@ class RuleEngineController extends AbstractController
     } catch (\Exception $e) {
       return new JsonResponse(["message" => "The credentials used for the login requests towards the external api are not okay!"], $e->getCode());
     }
+    return new JsonResponse($token);
+
 
     // Upload file for test
     try {
@@ -76,13 +78,12 @@ class RuleEngineController extends AbstractController
 
     // Conclude Uploaded File
 
-    try {
-      $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
-      $message = 'Your Upload Id is ' . $ciUploadId;
-      $notifyService->sendNotification($email, $message);
-      return new JsonResponse(['message' => $message], 200);
-    } catch (\Exception $e) {
-      return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
-    }
+    // try {
+    //   $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
+    //   $message = 'Your Upload Id is ' . $ciUploadId;
+    //   $this->notifyService->sendNotify($email, $message);
+    // } catch (\Exception $e) {
+    //   return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
+    // }
   }
 }

@@ -54,7 +54,7 @@ class RuleEngineController extends AbstractController
 
 
     // Env Variables 
-    // $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
+    $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
 
     // Try to login and generate JWT token
     try {
@@ -78,9 +78,8 @@ class RuleEngineController extends AbstractController
 
     try {
       $conclude_file = $callApiService->conclude_file($token, $ciUploadId);
-      $message = 'Your Upload Id is ' . $ciUploadId;
-      $notifyService->sendNotification($email, $message);
-      return new JsonResponse(['message' => $message], 200);
+      $message = '';
+      $this->notifyService->sendNotify($email, $message);
     } catch (\Exception $e) {
       return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
     }
