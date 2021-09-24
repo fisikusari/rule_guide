@@ -33,6 +33,7 @@ class RuleEngineController extends AbstractController
    * @param  mixed $request
    * @return Response
    */
+
   public function rule_engine(AuthService $authService, CallApiService $callApiService, string $uploadDir, FileUploader $uploader, NotifyService $notifyService, Request $request): Response
   {
 
@@ -91,8 +92,8 @@ class RuleEngineController extends AbstractController
    *
    * @param  mixed $authService
    * @param  mixed $callApiService
-   * @param  mixed $notifyService
    * @param  mixed $request
+   * @param  mixed $notifyService
    * @return Response
    */
   public function get_status(AuthService $authService, CallApiService $callApiService, NotifyService $notifyService, Request $request): Response

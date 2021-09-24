@@ -91,8 +91,8 @@ class RuleEngineController extends AbstractController
    *
    * @param  mixed $authService
    * @param  mixed $callApiService
-   * @param  mixed $notifyService
    * @param  mixed $request
+   * @param  mixed $notifyService
    * @return Response
    */
   public function get_status(AuthService $authService, CallApiService $callApiService, NotifyService $notifyService, Request $request): Response
