@@ -139,11 +139,8 @@ class RuleEngineController extends AbstractController
     } catch (\Exception $e) {
       $message = 'The upload has failed';
       if ($upload_failed) {
-        if ($upload_in_progress) {
-          $notifyService->sendNotification($email, $message);
-        }
       }
-      return new JsonResponse(["message" => $message], $e->getCode());
+      return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
     }
   }
 }

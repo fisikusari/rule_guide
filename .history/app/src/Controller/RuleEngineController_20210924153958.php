@@ -110,7 +110,6 @@ class RuleEngineController extends AbstractController
 
     $vulnerabilities_value = $this->getParameter('app.vulnerabilities_value');
     $upload_in_progress = $this->getParameter('app.upload_in_progress');
-    $upload_failed = $this->getParameter('app.upload_failed');
 
     // Try to login and generate JWT token
 
@@ -137,13 +136,7 @@ class RuleEngineController extends AbstractController
         return new JsonResponse(['message' => $message], 200);
       }
     } catch (\Exception $e) {
-      $message = 'The upload has failed';
-      if ($upload_failed) {
-        if ($upload_in_progress) {
-          $notifyService->sendNotification($email, $message);
-        }
-      }
-      return new JsonResponse(["message" => $message], $e->getCode());
+      return new JsonResponse(["message" => 'Something went wrong!'], $e->getCode());
     }
   }
 }
