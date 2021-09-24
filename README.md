@@ -31,6 +31,15 @@ Request method is POST and the requeired fields are:
 4. repositoryName
 5. commitName
 
-To get status of the uploaded file check your email or slack chat where you can find ciUploadId. By using this code and send get reuquest on (http://localhost:8080/get-status) you will be notified for the status of the file that you have uploaded.
+To get status of the uploaded file check your email or slack chat where you can find ciUploadId. 
+By using this ID you can get the status of your dependencie. Use (http://localhost:8080/get-status) route
+to get the status.
+Request metho is Get and the required fields are:
+
+1. email,
+2. password
+3. ciUploadId
 
 Note: to get login access you should have an account on (https://debricked.com/).
+
+

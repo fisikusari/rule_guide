@@ -17,14 +17,23 @@ class AuthService
   private $client;
 
   /**
+   * auth_url
+   *
+   * @var mixed
+   */
+  private $auth_url;
+
+  /**
    * __construct
    *
    * @param  mixed $client
+   * @param  mixed $auth_url
    * @return void
    */
-  public function __construct(HttpClientInterface $client)
+  public function __construct(HttpClientInterface $client, string $auth_url)
   {
     $this->client = $client;
+    $this->auth_url = $auth_url;
   }
 
   /**
@@ -38,7 +47,7 @@ class AuthService
   {
     $response = $this->client->request(
       'POST',
-      'https://app.debricked.com/api/login_check',
+      $this->auth_url,
       [
         'headers' => [
           'Accept' => 'application/json',

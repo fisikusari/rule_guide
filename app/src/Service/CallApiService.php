@@ -52,13 +52,12 @@ class CallApiService
    */
   public function upload_file($token, $filePath, $repositoryName, $commitName)
   {
-    $body = [
+    $formData = new FormDataPart([
       'fileData' => DataPart::fromPath($filePath),
       'repositoryName' => $repositoryName,
       'commitName' => $commitName
-    ];
+    ]);
 
-    $formData = new FormDataPart($body);
     $response = $this->client->request(
       'POST',
       $this->api_url . 'uploads/dependencies/files',
@@ -70,6 +69,7 @@ class CallApiService
         'body' => $formData->bodyToIterable(),
       ]
     );
+
     return $response->toArray();
   }
 
@@ -82,9 +82,6 @@ class CallApiService
    */
   public function conclude_file($token, $ciUploadId)
   {
-    $body = [
-      'ciUploadId' => $ciUploadId,
-    ];
     $response = $this->client->request(
       'POST',
       $this->api_url . 'finishes/dependencies/files/uploads',
@@ -93,9 +90,12 @@ class CallApiService
           'Accept' => 'application/json',
           'Authorization' => 'Bearer ' . $token
         ],
-        'body' => $body,
+        'body' => [
+          'ciUploadId' => $ciUploadId,
+        ],
       ]
     );
+
     return $response->getStatusCode();
   }
 
